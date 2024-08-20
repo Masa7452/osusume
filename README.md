@@ -27,7 +27,46 @@ Ensure you understand the costs involved before running this application, especi
 
 ## Setup
 
-[Setup instructions remain the same as in the previous version]
+### BigQuery Setup
+
+1. Create a new dataset in BigQuery:
+   ```
+   bq mk --dataset your_project_id:osusume_dataset
+   ```
+
+2. Create a table in the dataset:
+   ```
+   bq mk --table your_project_id:osusume_dataset.product_interactions user_id:STRING,product_id:STRING,category:STRING,price:FLOAT,season:STRING,purchased:BOOLEAN
+   ```
+
+3. Load the CSV data into the table:
+   ```
+   bq load --source_format=CSV your_project_id:osusume_dataset.product_interactions path/to/your/product_interactions.csv
+   ```
+
+### Environment Variables
+
+Create a `.env` file in the root directory of the project with the following content:
+
+```
+PROJECT_ID=your_project_id
+LOCATION=us-central1  # or your preferred region
+BQ_DATASET=osusume_dataset
+BQ_TABLE_NAME=product_interactions
+```
+
+### Google Cloud Authentication
+
+1. Create a service account key file and download it as `secret.json`.
+2. Place `secret.json` in the root directory of the project.
+
+### Docker Setup
+
+1. Ensure Docker is installed and running on your machine.
+2. Build the Docker image:
+   ```
+   docker-compose build
+   ```
 
 ## Running the Application
 
@@ -68,7 +107,12 @@ Ensure you understand the costs involved before running this application, especi
 
 ## Project Structure
 
-[Project structure remains the same as in the previous version]
+- `main.py`: The main Python script containing the recommendation engine logic.
+- `Dockerfile`: Defines the Docker image for the application.
+- `docker-compose.yml`: Defines the services and configuration for running the application.
+- `requirements.txt`: Lists the Python dependencies for the project.
+- `.env`: Contains environment variables (do not commit this file to version control).
+- `secret.json`: Google Cloud service account key (do not commit this file to version control).
 
 ## Notes
 
