@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  osusume:
+    build: .
+    environment:
+      - PROJECT_ID=${PROJECT_ID}
+      - LOCATION=${LOCATION}
+      - BQ_DATASET=${BQ_DATASET}
+      - BQ_TABLE_NAME=${BQ_TABLE_NAME}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/secret.json
+    volumes:
+      - ./secret.json:/app/secret.json:ro
