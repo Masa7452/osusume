@@ -53,7 +53,6 @@ def train_and_deploy_model():
         budget_milli_node_hours=1000,
     )
 
-    # モデルをデプロイ
     endpoint = model.deploy(
         machine_type="n1-standard-4",
         min_replica_count=1,
@@ -71,7 +70,6 @@ def get_recommendations(user_id):
         print("エラー: モデルがデプロイされていません。")
         return []
 
-    # BigQuery からユーザーの購買履歴を取得
     query = f"""
     SELECT DISTINCT product_id, category, price, season
     FROM `{PROJECT_ID}.{BQ_DATASET}.{BQ_TABLE_NAME}`
@@ -82,7 +80,6 @@ def get_recommendations(user_id):
 
     purchased_products = [row['product_id'] for row in results]
 
-    # 全商品リストを取得
     query = f"""
     SELECT DISTINCT product_id, category, price, season
     FROM `{PROJECT_ID}.{BQ_DATASET}.{BQ_TABLE_NAME}`
@@ -92,10 +89,8 @@ def get_recommendations(user_id):
 
     all_products = [(row['product_id'], row['category'], row['price'], row['season']) for row in results]
 
-    # 未購入の商品を抽出
     unpurchased_products = [product for product in all_products if product[0] not in purchased_products]
 
-    # モデルを使って推薦スコアを計算
     endpoint = aiplatform.Endpoint(ENDPOINT_NAME)
 
     predictions = endpoint.predict([
@@ -103,7 +98,6 @@ def get_recommendations(user_id):
         for product in unpurchased_products
     ])
 
-    # スコアの高い順に商品をソート
     recommended_products = sorted(
         zip(unpurchased_products, predictions.predictions),
         key=lambda x: x[1][1],  # positive class probability
