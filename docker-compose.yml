@@ -8,6 +8,9 @@ services:
       - LOCATION=${LOCATION}
       - BQ_DATASET=${BQ_DATASET}
       - BQ_TABLE_NAME=${BQ_TABLE_NAME}
+      - MODEL_ENDPOINT_NAME=${MODEL_ENDPOINT_NAME}
       - GOOGLE_APPLICATION_CREDENTIALS=/app/secret.json
     volumes:
       - ./secret.json:/app/secret.json:ro
+    stdin_open: true
+    tty: true
